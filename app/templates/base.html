@@ -1,0 +1,82 @@
+{% extends "bootstrap/base.html" %}
+{% from "bootstrap/pagination.html" import render_pagination %}
+
+{% block title %}51-read | {{ title }}{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+{% endblock %}
+
+{% block navbar %}
+    <div class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ url_for('main.index') }}">51-read</a>
+            </div>
+            <form class="navbar-form navbar-left" role="search" action="{{ url_for('main.index') }}" method="GET">
+                <div class="form-group input-group input-group-md">
+                    <label for="query" class="sr-only">Search</label>
+                    <input type="text" class="form-control" id="query" name="query" placeholder="Search">
+                    <span class="input-group-btn">
+                      <button type="submit" class="btn btn-primary">
+                          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                      </button>
+                  </span>
+                </div>
+            </form>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span
+                                class="glyphicon glyphicon-plus"
+                                aria-hidden="true"></span> <b
+                                class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('main.index') }}">Add books</a></li>
+                            <li><a href="{{ url_for('main.index') }}">Get books</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% for message in get_flashed_messages(with_categories=True) %}
+            {% if message[0] == "error" %}
+                <div class="row text-center" style="margin-top: -20px;">
+                    <div id="flash_alert" class="alert alert-danger">{{ message[1] }}</div>
+                </div>
+            {% endif %}
+            {% if message[0] == "info" %}
+                <div class="row text-center" style="margin-top: -20px;">
+                    <div id="flash_info" class="alert alert-info">{{ message[1] }}</div>
+                </div>
+            {% endif %}
+            {% if message[0] == "success" %}
+                <div class="row text-center" style="margin-top: -20px;">
+                    <div id="flash_success" class="alert alert-success">{{ message[1] }}</div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% block page_content %}{% endblock %}
+        {% if pagination %}
+            {{ render_pagination(pagination) }}
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+{% endblock %}
