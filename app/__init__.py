@@ -10,6 +10,7 @@ from flask_bootstrap import Bootstrap
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_uploads import UploadSet, configure_uploads, patch_request_class
 from config import Config
 from flask_login import LoginManager
 
@@ -21,6 +22,7 @@ login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 login_manager.login_message = 'Please log in to access this page.'
 
+uploads = UploadSet('uploads', ('txt', 'pdf', 'epub', 'mobi', 'azw', 'azw3', 'cbr', 'cbz', 'cbt', 'doc', 'docx', 'fb2'))
 
 
 def create_app(config_class=Config):
@@ -33,6 +35,8 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     login_manager.init_app(app)
 
+    configure_uploads(app, uploads)
+    patch_request_class(app)
 
     from app.errors import errors as errors_blueprint
     app.register_blueprint(errors_blueprint)

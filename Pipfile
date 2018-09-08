@@ -1,5 +1,5 @@
 [[source]]
-url = "https://pypi.org/simple"
+url = "https://pypi.doubanio.com/simple/"
 verify_ssl = true
 name = "pypi"
 
@@ -18,8 +18,15 @@ rq = "*"
 coverage = "*"
 pyjwt = "*"
 python-dotenv = "*"
+flask-uploads = "*"
+"pypdf2" = "*"
+lxml = "*"
+"iso-639" = "*"
+gunicorn = "*"
+"psycopg2" = "*"
+qiniu = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.7"
+python_version = "3.6.6"

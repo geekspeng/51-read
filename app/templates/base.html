@@ -22,25 +22,45 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url_for('main.index') }}">51-read</a>
+                <a class="navbar-brand" href="{{ url_for('main.index') }}">
+                    <span class="glyphicon glyphicon-book"></span>
+                    51-read</a>
             </div>
-            <form class="navbar-form navbar-left" role="search" action="{{ url_for('main.index') }}" method="GET">
+            <form class="navbar-form navbar-left" role="search" action="{{ url_for('main.search') }}" method="GET">
                 <div class="form-group input-group input-group-md">
                     <label for="query" class="sr-only">Search</label>
-                    <input type="text" class="form-control" id="query" name="query" placeholder="Search">
+                    <input type="text" class="form-control" id="query" name="query" placeholder="Local Search">
                     <span class="input-group-btn">
                       <button type="submit" class="btn btn-primary">
                           <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                       </button>
-                  </span>
+                    </span>
                 </div>
             </form>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}
+                        <li>
+                            <form id="form-upload" class="navbar-form" action="{{ url_for('main.upload') }}"
+                                  method="post" enctype="multipart/form-data">
+                                <div class="form-group">
+                                        <span class="btn btn-primary btn-file">
+                                            <span class="glyphicon glyphicon-circle-arrow-up"></span>
+                                            <input id="btn-upload" name="btn-upload" type="file" multiple>Upload
+                                        </span>
+                                </div>
+                            </form>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-primary navbar-btn" data-toggle="modal" data-target="#searchModal">
+                                <span class="glyphicon glyphicon-circle-arrow-down"></span>
+                                Get Books
+                            </button>
+                        </li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img class="img-rounded profile-thumbnail" src="{{ current_user.avatar() }}"> <b class="caret"></b></a>
                             <ul class="dropdown-menu">
+                                <li><a href="{{ url_for('auth.change_kindle_email') }}">Change kindle email</a></li>
                                 <li><a href="{{ url_for('auth.change_password') }}">Change password</a></li>
                                 <li><a href="{{ url_for('auth.logout') }}">Sign out</a></li>
                             </ul>
@@ -67,9 +87,35 @@
             {{ render_pagination(pagination) }}
         {% endif %}
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" style="z-index:9999;">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="searchModalLabel">Get Books</h4>
+          </div>
+          <div class="modal-body">
+              <iframe src="https://www.jiumodiary.com/" width="100%" height="800px" frameborder="0"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
 
 {% endblock %}
 
+{% block styles %}
+    {{ super() }}
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+{% endblock styles %}
+
 {% block scripts %}
     {{ super() }}
+    <script type="text/javascript">
+        $(function () {
+            $("#btn-upload").change(function () {
+                $("#form-upload").submit();
+            });
+        });
+    </script>
 {% endblock %}

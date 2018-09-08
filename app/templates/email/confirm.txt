@@ -1,4 +1,4 @@
-Dear {{ user.username }},
+Dear {{ user.email }},
 
 Welcome to 51read!
 

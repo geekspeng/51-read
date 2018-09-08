@@ -10,7 +10,7 @@ from werkzeug.urls import url_parse
 from app import db
 from app.auth import auth
 from app.auth.forms import LoginForm, RegistrationForm, ChangePasswordForm, \
-    ResetPasswordRequestForm, ResetPasswordForm
+    ResetPasswordRequestForm, ResetPasswordForm, ChangeKindleEmailForm
 from app.models.users import Users
 from app.utils.email import send_password_reset_email, send_confirmation_email
 
@@ -112,6 +112,20 @@ def change_password():
         else:
             flash(Markup('Invalid password.'), "warning")
     return render_template("auth/change_password.html", title='Change password', form=form)
+
+
+@auth.route('/change_kindle_email', methods=['GET', 'POST'])
+@login_required
+def change_kindle_email():
+    form = ChangeKindleEmailForm()
+    if form.validate_on_submit():
+        current_user.kindle_email = form.kindle_email.data
+        db.session.add(current_user)
+        db.session.commit()
+        flash(Markup('Kindle email has been updated.'), "info")
+        return redirect(url_for('main.index'))
+    form.kindle_email.data = current_user.kindle_email
+    return render_template("auth/change_kindle_mail.html", title='Change kindle email', form=form)
 
 
 @auth.route('/reset_password_request', methods=['GET', 'POST'])

@@ -1,7 +1,70 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block page_content %}
-<div class="page-header">
-    <h1>Home</h1>
-</div>
+    <div class="row">
+        {% if books %}
+            {% for book in books %}
+                <div class="col-sm-3 col-lg-2 col-xs-6 book">
+                    <div class="cover">
+                        <a href="{{ url_for('main.read_book', file_format=book.data[0].format.lower(), book_id=book.id) }}">
+                            {% if book.has_cover %}
+                                <img src="{{ url_for('main.get_cover', book_id=book.id) }}"
+                                     alt="{{ book.title }}"/>
+                            {% else %}
+                                <img src="{{ url_for('static', filename='generic_cover.jpg') }}"
+                                     alt="{{ book.title }}"/>
+                            {% endif %}
+                        </a>
+                        <div class="delete">
+                            <a title="Delete book" class="badge" href="{{ url_for('main.delete_book', book_id=book.id) }}">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </a>
+                        </div>
+                        <div class="btn-toolbar toolbar" role="toolbar">
+                            <a title="Convert book" class="badge" href="{{ url_for('main.convert_book', book_id=book.id) }}">
+                                <span class="glyphicon glyphicon-refresh"></span>
+                            </a>
+                            <a title="Send to kindle"  class="badge" href="{{ url_for('main.send_to_kindle', book_id=book.id) }}">
+                                <span class="glyphicon glyphicon-envelope"></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div>
+                        {% for file in book.data %}
+                            <a href="{{ url_for('main.read_book', file_format=file.format.lower(), book_id=book.id) }}"
+                                   class="badge">{{ file.format.lower() }}</a>
+                        {% endfor %}
+                    </div>
+
+                    <div class="meta">
+                        <p class="title">{{ book.title | truncate(20, True) }}</p>
+                        <p class="author">
+                            {% for author in book.authors %}
+                                {{ author.name | replace('|',',') }}
+                                {% if not loop.last %}
+                                    &amp;
+                                {% endif %}
+                            {% endfor %}
+                        </p>
+                        {% if book.ratings.__len__() > 0 %}
+                            <div class="rating">
+                                {% for number in range((book.ratings[0].rating/2)|int(2)) %}
+                                    <span class="glyphicon glyphicon-star good"></span>
+                                    {% if loop.last and loop.index < 5 %}
+                                        {% for numer in range(5 - loop.index) %}
+                                            <span class="glyphicon glyphicon-star"></span>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h2>No Results</h2>
+        {% endif %}
+    </div>
 {% endblock %}
+
+

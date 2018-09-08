@@ -8,6 +8,7 @@ import sys
 import click
 
 from app import create_app, db
+from app.models.books import Books
 
 COV = None
 if os.environ.get('FLASK_COVERAGE'):
@@ -20,7 +21,7 @@ app = create_app()
 
 @app.shell_context_processor
 def make_shell_context():
-    return dict(db=db)
+    return dict(db=db, Books=Books)
 
 
 @app.cli.command()

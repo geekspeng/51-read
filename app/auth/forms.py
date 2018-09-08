@@ -35,6 +35,11 @@ class ChangePasswordForm(FlaskForm):
     submit = SubmitField('Update Password')
 
 
+class ChangeKindleEmailForm(FlaskForm):
+    kindle_email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Update Kindle Email')
+
+
 class ResetPasswordRequestForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     # recaptcha = RecaptchaField()

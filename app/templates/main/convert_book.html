@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block page_content %}
+    <h1>Convert Book</h1>
+    <div class="row">
+        <div class="col-sm-3 col-lg-2 col-xs-6 book">
+            <div class="cover" id="book">
+                <a href="{{ url_for('main.read_book', file_format=book.data[0].format.lower(), book_id=book.id) }}">
+                    {% if book.has_cover %}
+                        <img src="{{ url_for('main.get_cover', book_id=book.id) }}"
+                             alt="{{ book.title }}"/>
+                    {% else %}
+                        <img src="{{ url_for('static', filename='generic_cover.jpg') }}"
+                             alt="{{ book.title }}"/>
+                    {% endif %}
+                </a>
+            </div>
+            <div class="meta">
+                <p class="title">{{ book.title | truncate(15, True) }}</p>
+                <p class="author">
+                    {% for author in book.authors %}
+                        {{ author.name | replace('|',',') }}
+                        {% if not loop.last %}
+                            &amp;
+                        {% endif %}
+                    {% endfor %}
+                </p>
+                {% if book.ratings.__len__() > 0 %}
+                    <div class="rating">
+                        {% for number in range((book.ratings[0].rating/2)|int(2)) %}
+                            <span class="glyphicon glyphicon-star good"></span>
+                            {% if loop.last and loop.index < 5 %}
+                                {% for numer in range(5 - loop.index) %}
+                                    <span class="glyphicon glyphicon-star"></span>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-sm-3 col-lg-2 col-xs-6 book">
+            {{ wtf.quick_form(form, button_map={'submit': 'primary'}) }}
+        </div>
+    </div>
+{% endblock %}
