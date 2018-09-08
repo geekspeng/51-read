@@ -3,6 +3,7 @@
 # @Author  : geekspeng 
 # @Email   : geekspeng@icloud.com
 import os
+
 from dotenv import load_dotenv
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -10,6 +11,13 @@ load_dotenv(os.path.join(basedir, '.env'))
 
 
 class Config:
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'you-will-never-guess')
+
+    # recaptcha
+    # RECAPTCHA_PUBLIC_KEY = '6LeYIbsSAAAAACRPIllxA7wvXjIE411PfdB2gt2J'
+    # RECAPTCHA_PRIVATE_KEY = '6LeYIbsSAAAAAJezaIq3Ft_hSTo0YtyeFG-JgRtu'
+    # RECAPTCHA_OPTIONS = dict(theme='custom')
+
     # SQLAlchemy config
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL',

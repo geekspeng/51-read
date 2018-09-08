@@ -1,10 +1,13 @@
 {% extends "bootstrap/base.html" %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as utils %}
 {% from "bootstrap/pagination.html" import render_pagination %}
 
 {% block title %}51-read | {{ title }}{% endblock %}
 
 {% block head %}
     {{ super() }}
+    {{fixes.ie8()}}
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 {% endblock %}
@@ -34,16 +37,18 @@
             </form>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span
-                                class="glyphicon glyphicon-plus"
-                                aria-hidden="true"></span> <b
-                                class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ url_for('main.index') }}">Add books</a></li>
-                            <li><a href="{{ url_for('main.index') }}">Get books</a></li>
-                        </ul>
-                    </li>
+                    {% if current_user.is_authenticated %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img class="img-rounded profile-thumbnail" src="{{ current_user.avatar() }}"> <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url_for('auth.change_password') }}">Change password</a></li>
+                                <li><a href="{{ url_for('auth.logout') }}">Sign out</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li><a href="{{ url_for('auth.login') }}">Sign in</a></li>
+                        <li><a href="{{ url_for('auth.register') }}">Sign up</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -52,24 +57,12 @@
 
 {% block content %}
     <div class="container">
-        {% for message in get_flashed_messages(with_categories=True) %}
-            {% if message[0] == "error" %}
-                <div class="row text-center" style="margin-top: -20px;">
-                    <div id="flash_alert" class="alert alert-danger">{{ message[1] }}</div>
-                </div>
-            {% endif %}
-            {% if message[0] == "info" %}
-                <div class="row text-center" style="margin-top: -20px;">
-                    <div id="flash_info" class="alert alert-info">{{ message[1] }}</div>
-                </div>
-            {% endif %}
-            {% if message[0] == "success" %}
-                <div class="row text-center" style="margin-top: -20px;">
-                    <div id="flash_success" class="alert alert-success">{{ message[1] }}</div>
-                </div>
-            {% endif %}
-        {% endfor %}
+        <div class="row text-center" style="margin-top: -10px;">
+            {{ utils.flashed_messages(messages, dismissible=True) }}
+        </div>
+
         {% block page_content %}{% endblock %}
+
         {% if pagination %}
             {{ render_pagination(pagination) }}
         {% endif %}

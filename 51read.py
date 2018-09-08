@@ -4,7 +4,9 @@
 # @Email   : geekspeng@icloud.com
 import os
 import sys
+
 import click
+
 from app import create_app, db
 
 COV = None
