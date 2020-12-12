@@ -1,7 +1,0 @@
-epub.js 有两种打开文件的方式：
-1. 一种是解压后的epub，这时路径后面要加斜杠
-    {{ url_for('static', filename='SQL/') }}
-
-2. 打开没有解压的文件，这时需要添加jszip.js，同时路径需要带epub后缀
-   <script src="{{ url_for('static', filename='js/libs/jszip.min.js') }}"></script>
-   {{ url_for('static', filename='程序员必读之软件架构.epub') }}
